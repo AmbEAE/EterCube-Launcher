@@ -1,116 +1,16 @@
-<p align="center"><img src="../src/assets/images/icon.png" alt="icon-launcher"></p>
-
-<h1 align="center">CraftLaunch</h1>
-
-#### [<p align="center">]() *(Un launcher minecraft performant et puissant basé sur electron)*
-[<p align="center">]()
-![GitHub all releases](https://img.shields.io/github/downloads/luuxis/Selvania-Launcher/total?style=for-the-badge)
-![Discord](https://img.shields.io/discord/819729377650278420?style=for-the-badge)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/luuxis/Selvania-Launcher?style=for-the-badge)
-[<p align="center">]()
-![GitHub forks](https://img.shields.io/github/forks/luuxis/Selvania-Launcher?style=for-the-badge)
-![GitHub Repo stars](https://img.shields.io/github/stars/luuxis/Selvania-Launcher?style=for-the-badge)
-
-#### *<p align="center">Do you speak english 🇬🇧/🇺🇸 ? You can find the readme and the documentation translated into English [Here](/README_EN-US.md).</p>*
-
----
-### **<ins><p align="center">Conditions d'utilisation :</p>**
-- Pour utiliser le code vous devez faire un fork du projet.
-- Pour utiliser le code votre code doit tout le temps être public.
-- Pour utiliser le code toute mention originale de la licence doit être gardé.
-- Pour utiliser le code vous devez garder la licence originale.
-
----
-
-### **<ins><p align="center">Screenshots :</p>**
-
-<img src="images/3.png" alt="screenshot3"><p align="center"> *Page principale*
-&nbsp;
-<img src="images/4.png" alt="screenshot4"><p align="center"> *Page de gestion des skins*
-&nbsp;
-<img src="images/5.png" alt="screenshot5"><p align="center"> *Page de gestion des comptes*
-&nbsp;
-<img src="images/1.png" alt="screenshot8"><p align="center"> *Page de connexion*
----
-
-### **<ins><p align="center">Fonctionnalitées du launcher :</p>**
-
-- ✅ Mise à jour automatiques via github.
-
-- 🔴 Option pour mettre le launcher en maintenance.
-
-- 🔒 Authentification Microsoft.
-
-- 🏴‍☠️ Authentification Crack.
-
-- ⛏️ Supporte toutes versions de Minecraft 1.0 > 1.19.x (Forge, Fabric etc).
-
-- 📦 Supporte les version moddées Forge et Fabric (Pas les MCP)
- 
-- 📰 Fil d'actualité intégré nativement au launcher.
-
-- 🚹 Gestionnaire de skins.
-
-- ⚙️ Gestion intuitive des paramètres, y compris un panneau de configuration Java.
-
-- 🟢 Statut serveur complet.
-
-    - Opérationnel ou hors ligne.
-
-    - Nombres de joueurs connectés.
-
-- ☕ Installation de Java automatique.
-
-    - Si vous avez installé une version incompatible de Java, nous installerons la bonne pour vous.
-    
-    - Vous n'avez pas besoin d'avoir Java installé pour exécuter le launcher.
-
-Ce n'est pas une liste exhaustive. Installez le launcher pour voir tout ce qu'il peut faire !
-
-Vous aimez le projet ? Laissez une étoile ⭐ sur le repo !
-
----
-
-### **<ins><p align="center">Vous avez besoin d'aide pour faire votre propre launcher ? :</p>**
-
-- Voici le [Wiki](./wiki.md) spécialement rédigé pour vous guider pas à pas dans la création de votre launcher.
-
----
-### **<ins><p align="center">Téléchargement :</p>**
-
-Vous pouvez télécharger le launcher à partir des [Releases GitHub](https://github.com/luuxis/Selvania-Launcher/releases).
-
-Plateformes supportées :
-
-- Windows 
-- Linux
-- MacOS
-
-Si vous téléchargez à partir des Releases, sélectionnez le programme d'installation de votre système.
-
- Plateforme | Fichier |
-| -------- | ---- |
-| Windows x64 | `Selvania-Launcher-win-x64.exe ` |
-| macOS x64 | `Selvania-Launcher-mac-x64.dmg` |
-| macOS arm64 | `Selvania-Launcher-mac-arm64.dmg` |
-| Linux x64 | `Selvania-Launcher-linux-x86_64.AppImage` |
-
----
-
-<br>
-
-Si vous aimez ce projet et que vous voulez aider à le développer, vous pouvez nous faire un don sur [Paypal](https://www.paypal.me/luuxiss).
-
-Si vous avez des questions, un problème ou des suggestions n'hésitez pas à rejoindre notre discord :
-
-<br>
-
-[![discord](https://discordapp.com/api/guilds/819729377650278420/embed.png?style=banner2)][discord]
-<br>
-<br>
-
-[<p align="center">]() *Readme réalisé par [@Fefe_du_973](https://github.com/Fefedu973)*  </p>
-
----
-
-[discord]: http://discord.luuxis.fr 'Discord'
+<p><strong><em><span style="text-decoration: underline;">Arthania Launcher est un fork du Selvania-Launcher prennant en charge &agrave; 100% la liaison avec Azuriom</span></em></strong></p>
+<p><span style="text-decoration: underline;"><em>Comment configurer ce launcher ?</em></span></p>
+<p>1) Il faut fork ce projet. Ensuite il faut le clone avec git ou github desktop.</p>
+<p>2) Allez ensuite dans le fichier package.json et modifer les lignes suivantes: "name" et "<span style="font-size: 14.4px;">preductname</span><span style="font-size: 0.9em;">" avec le nom du launcher, ""version" avec la version, "description" avec la description, "author" avec l'auteur (merci de laisser Luuxis/Riptiaz et de rajouter votre pseudo), "url" avec l'url de votre webfolder, "azauth" avec l'url de votre site azuriom.</span></p>
+<p>3) Faites ensuites <em><strong>npm i</strong></em></p>
+<p>4) Allez maintenant dans votre webfolder, remplacez le config.json par celui dans la branche webfolder de mon fork si cela n'est pas d&eacute;j&agrave; fait. Ouvres ensuites ce fichier.</p>
+<p>5) Indiquez ensuite la m&ecirc;me chose que dans le launcher Selvania sauf: -<strong>"online" doit &ecirc;tre sur true</strong></p>
+<p>6) Changez maintenant ces lignes dans le config.json:</p>
+<p>-"changelog_version": changer par la version de votre serveur/launcher</p>
+<p>-"changelog_new": changer par du code html pour expliquer les nouveaut&eacute;s du launcher ou du serveur</p>
+<p>-"homeimg_admin": changer par un lien d'une image en 1920x1080 qui sera affich&eacute; pour les admins en fond</p>
+<p><span style="font-size: 14.4px;">-"homeimg_vip":&nbsp;</span><span style="font-size: 14.4px;">changer par un lien d'une image en 1920x1080 qui sera affich&eacute; pour les vip en fond</span></p>
+<p><span style="font-size: 14.4px;">-"homeimg_modo":&nbsp;</span><span style="font-size: 14.4px;">changer par un lien d'une image en 1920x1080 qui sera affich&eacute; pour les modo en fond</span></p>
+<p><span style="font-size: 14.4px;">-"homeimg_member":&nbsp;</span><span style="font-size: 14.4px;">changer par un lien d'une image en 1920x1080 qui sera affich&eacute; pour les membres en fond</span></p>
+<p><span style="font-size: 14.4px;">-"server_img": changer par un lien d'une image logo de votre serveur (sera affich&eacute; sur le statut serveur)</span></p>
+<p><strong>Pour ce qui est mise &agrave; jour, build, fichier forge, c'est comme le Selvania Launcher (attention pour le moment l'ancienne version de minecraft-java-core est utilis&eacute;e, vous devez donc mettre manuellement les fichiers forges/fabric)</strong></p>

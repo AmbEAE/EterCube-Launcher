@@ -5,9 +5,9 @@
 
 'use strict';
 
-import { logger, database, changePanel } from '../utils.js';
+import { logger, database, changePanel} from '../utils.js';
 
-const { Launch, Status } = require('minecraft-java-core');
+const { Launch, Status } = require('minecraft-java-core-riptiaz');
 const { ipcRenderer } = require('electron');
 const launch = new Launch();
 const pkg = require('../package.json');
@@ -24,6 +24,7 @@ class Home {
         this.initLaunch();
         this.initStatusServer();
         this.initBtn();
+        this.bkgrole();
     }
 
     async initNews() {
@@ -61,8 +62,8 @@ class Home {
                         </div>
                         <div class="news-content">
                             <div class="bbWrapper">
-                                <p>${News.content.replace(/\n/g, '</br>')}</p>
-                                <p class="news-author">Auteur,<span> ${News.author}</span></p>
+                                <p>${News.content}</p>
+                                <p class="news-author"><span> ${News.author}</span></p>
                             </div>
                         </div>`
                     news.appendChild(blockNews);
@@ -85,6 +86,86 @@ class Home {
             // news.appendChild(blockNews);
         }
     }
+    async bkgrole () {
+        let uuid = (await this.database.get('1234', 'accounts-selected')).value;
+        let account = (await this.database.get(uuid.selected, 'accounts')).value;
+        if (account.role != "Admin" ?? "Fondateur" ?? "Responsable Modo") {
+            document.querySelector(".admin-btn").style.display = "none";
+        }
+        
+
+
+        let blockRole = document.createElement("div");
+        blockRole.innerHTML = `
+        <div>${account.role}</div>
+        `
+        document.querySelector('.player-role').appendChild(blockRole);
+        if(!account.role) {
+            document.querySelector(".player-role").style.display = "none";
+        }
+
+
+        let blockMonnaie = document.createElement("div");
+        blockMonnaie.innerHTML = `
+        <div>${account.monnaie} pts</div>
+        `
+        document.querySelector('.player-monnaie').appendChild(blockMonnaie);
+        if(account.monnaie === "undefined") {
+            document.querySelector(".player-monnaie").style.display = "none";
+        }
+
+        let title_changelog = document.createElement("div");
+        title_changelog.innerHTML = `
+        <div>${this.config.changelog_version}</div>
+        `
+        document.querySelector('.title-change').appendChild(title_changelog);
+        if(!this.config.changelog_version) {
+            document.querySelector(".title-change").style.display = "none";
+        }
+
+        let bbWrapperChange = document.createElement("div");
+        bbWrapperChange.innerHTML = `
+        <div>${this.config.changelog_new}</div>
+        `
+        document.querySelector('.bbWrapperChange').appendChild(bbWrapperChange);
+        if(!this.config.changelog_new) {
+            document.querySelector(".bbWrapperChange").style.display = "none";
+        }
+
+        let serverimg = document.querySelector('.server-img')
+        serverimg.setAttribute("src", `${this.config.server_img}`)
+        if(!this.config.server_img) {
+            serverimg.style.display = "none";
+        }
+
+
+        if (account.role === "Responsable Modo") {
+            document.body.style.background = `linear-gradient(#00000066, #00000066) url(${this.config.homeimg_respmodo}) black no-repeat center center scroll`
+        }
+        if (account.role === "Membre") {
+            document.body.style.background = `linear-gradient(#00000066, #00000066) url(${this.config.homeimg_member}) black no-repeat center center scroll`
+        }
+        if (account.role === "Fondateur") {
+            document.body.style.background = `linear-gradient(#00000066, #00000066) url(${this.config.homeimg_fonda}) black no-repeat center center scroll`
+        }
+        if (account.role === "Dev") {
+            document.body.style.background = `linear-gradient(#00000066, #00000066), url("${this.config.homeimg_dev}") black no-repeat center center scroll`
+        }
+        if (account.role === "Admin") {
+            document.body.style.background = `linear-gradient(#00000066, #00000066) url(${this.config.homeimg_admin}) black no-repeat center center scroll`
+        }
+        if (account.role === "Helper") {
+            document.body.style.background = `linear-gradient(#00000066, #00000066) url(${this.config.homeimg_helper}) black no-repeat center center scroll`
+        }
+        if (account.role === "Modo") {
+            document.body.style.background = `linear-gradient(#00000066, #00000066) url(${this.config.homeimg_modo}) black no-repeat center center scroll`
+        }
+        if (account.role === "VIP") {
+            document.body.style.background = `linear-gradient(#00000066, #00000066) url(${this.config.homeimg_vip})  black no-repeat center center scroll`
+        }
+        
+       
+    }
 
     async initLaunch() {
         document.querySelector('.play-btn').addEventListener('click', async () => {
@@ -92,8 +173,11 @@ class Home {
             let uuid = (await this.database.get('1234', 'accounts-selected')).value;
             let account = (await this.database.get(uuid.selected, 'accounts')).value;
             let ram = (await this.database.get('1234', 'ram')).value;
+            let javaPath = (await this.database.get('1234', 'java-path')).value;
+            let javaArgs = (await this.database.get('1234', 'java-args')).value;
             let Resolution = (await this.database.get('1234', 'screen')).value;
             let launcherSettings = (await this.database.get('1234', 'launcher')).value;
+            let screen;
 
             let playBtn = document.querySelector('.play-btn');
             let info = document.querySelector(".text-download")
@@ -111,23 +195,16 @@ class Home {
             let opts = {
                 url: this.config.game_url === "" || this.config.game_url === undefined ? `${urlpkg}/files` : this.config.game_url,
                 authenticator: account,
-                timeout: 10000,
                 path: `${dataDirectory}/${process.platform == 'darwin' ? this.config.dataDirectory : `.${this.config.dataDirectory}`}`,
                 version: this.config.game_version,
                 detached: launcherSettings.launcher.close === 'close-all' ? false : true,
-                downloadFileMultiple: 30,
-
-                loader: {
-                    type: this.config.loader.type,
-                    build: this.config.loader.build,
-                    enable: this.config.loader.enable,
-                },
-
+                java: this.config.java,
+                javapath: javaPath.path,
+                args: [...javaArgs.args, ...this.config.game_args],
+                screen,
+                modde: this.config.modde,
                 verify: this.config.verify,
-                ignored: ['loader', ...this.config.ignored],
-
-                java: true,
-
+                ignored: this.config.ignored,
                 memory: {
                     min: `${ram.ramMin * 1024}M`,
                     max: `${ram.ramMax * 1024}M`
@@ -138,51 +215,35 @@ class Home {
             info.style.display = "block"
             launch.Launch(opts);
 
-            launch.on('extract', extract => {
-                console.log(extract);
-            });
-
-            launch.on('progress', (progress, size) => {
+            launch.on('progress', (DL, totDL) => {
                 progressBar.style.display = "block"
-                document.querySelector(".text-download").innerHTML = `Téléchargement ${((progress / size) * 100).toFixed(0)}%`
-                ipcRenderer.send('main-window-progress', { progress, size })
-                progressBar.value = progress;
-                progressBar.max = size;
-            });
-
-            launch.on('check', (progress, size) => {
-                progressBar.style.display = "block"
-                document.querySelector(".text-download").innerHTML = `Vérification ${((progress / size) * 100).toFixed(0)}%`
-                progressBar.value = progress;
-                progressBar.max = size;
-            });
-
-            launch.on('estimated', (time) => {
-                let hours = Math.floor(time / 3600);
-                let minutes = Math.floor((time - hours * 3600) / 60);
-                let seconds = Math.floor(time - hours * 3600 - minutes * 60);
-                console.log(`${hours}h ${minutes}m ${seconds}s`);
+                document.querySelector(".text-download").innerHTML = `Téléchargement ${((DL / totDL) * 100).toFixed(0)}%`
+                ipcRenderer.send('main-window-progress', { DL, totDL })
+                progressBar.value = DL;
+                progressBar.max = totDL;
             })
 
             launch.on('speed', (speed) => {
                 console.log(`${(speed / 1067008).toFixed(2)} Mb/s`)
             })
 
-            launch.on('patch', patch => {
-                console.log(patch);
-                info.innerHTML = `Patch en cours...`
-            });
+            launch.on('check', (e) => {
+                progressBar.style.display = "block"
+                document.querySelector(".text-download").innerHTML = `Vérification ${((DL / totDL) * 100).toFixed(0)}%`
+                progressBar.value = DL;
+                progressBar.max = totDL;
+
+            })
 
             launch.on('data', (e) => {
                 new logger('Minecraft', '#36b030');
                 if (launcherSettings.launcher.close === 'close-launcher') ipcRenderer.send("main-window-hide");
-                ipcRenderer.send('main-window-progress-reset')
                 progressBar.style.display = "none"
                 info.innerHTML = `Demarrage en cours...`
                 console.log(e);
             })
 
-            launch.on('close', code => {
+            launch.on('close', () => {
                 if (launcherSettings.launcher.close === 'close-launcher') ipcRenderer.send("main-window-show");
                 progressBar.style.display = "none"
                 info.style.display = "none"
@@ -190,11 +251,7 @@ class Home {
                 info.innerHTML = `Vérification`
                 new logger('Launcher', '#7289da');
                 console.log('Close');
-            });
-
-            launch.on('error', err => {
-                console.log(err);
-            });
+            })
         })
     }
 
@@ -217,9 +274,14 @@ class Home {
     }
 
     initBtn() {
+        let azauth = pkg.user ? `${pkg.azauth}/${pkg.user}` : pkg.azauth
         document.querySelector('.settings-btn').addEventListener('click', () => {
             changePanel('settings');
         });
+        document.querySelector('.admin-btn').addEventListener('click', () => {
+            const { shell } = require('electron')
+            shell.openExternal(`${azauth}/admin`)
+        })
     }
 
     async getdate(e) {

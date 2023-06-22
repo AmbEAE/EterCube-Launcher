@@ -7,7 +7,10 @@
 
 // libs 
 const fs = require('fs');
-const { Microsoft, Mojang } = require('minecraft-java-core');
+const { Microsoft, Mojang, AZauth } = require('minecraft-java-core-riptiaz');
+const pkg = require('../package.json');
+let azauth = pkg.user ? `${pkg.azauth}/${pkg.user}` : pkg.azauth
+const AZAuth = new AZauth(azauth);
 const { ipcRenderer } = require('electron');
 
 import { config, logger, changePanel, database, addAccount, accountSelect } from './utils.js';
@@ -26,6 +29,7 @@ class Launcher {
         this.createPanels(Login, Home, Settings);
         this.getaccounts();
     }
+    
 
     initLog() {
         document.addEventListener("keydown", (e) => {
@@ -81,55 +85,9 @@ class Launcher {
         } else {
             for (let account of accounts) {
                 account = account.value;
-                if (account.meta.type === 'Xbox') {
-                    console.log(`Initializing Xbox account ${account.name}...`);
-                    let refresh = await new Microsoft(this.config.client_id).refresh(account);
-                    let refresh_accounts;
-                    let refresh_profile;
-
-                    if (refresh.error) {
-                        this.database.delete(account.uuid, 'accounts');
-                        this.database.delete(account.uuid, 'profile');
-                        if (account.uuid === selectaccount) this.database.update({ uuid: "1234" }, 'accounts-selected')
-                        console.error(`[Account] ${account.uuid}: ${refresh.errorMessage}`);
-                        continue;
-                    }
-
-                    refresh_accounts = {
-                        access_token: refresh.access_token,
-                        client_token: refresh.client_token,
-                        uuid: refresh.uuid,
-                        name: refresh.name,
-                        refresh_token: refresh.refresh_token,
-                        user_properties: refresh.user_properties,
-                        meta: refresh.meta
-                    }
-
-                    refresh_profile = {
-                        uuid: refresh.uuid
-                    }
-
-                    this.database.update(refresh_accounts, 'accounts');
-                    this.database.update(refresh_profile, 'profile');
-                    addAccount(refresh_accounts);
-                    if (account.uuid === selectaccount) accountSelect(refresh.uuid)
-                } else if (account.meta.type === 'Mojang') {
-                    if (account.meta.offline) {
-                    console.log(`Initializing Crack account ${account.name}...`);
-                        addAccount(account);
-                        if (account.uuid === selectaccount) accountSelect(account.uuid)
-                        continue;
-                    }
-
-                    let validate = await Mojang.validate(account);
-                    if (!validate) {
-                        this.database.delete(account.uuid, 'accounts');
-                        if (account.uuid === selectaccount) this.database.update({ uuid: "1234" }, 'accounts-selected')
-                        console.error(`[Account] ${account.uuid}: Token is invalid.`);
-                        continue;
-                    }
-
-                    let refresh = await Mojang.refresh(account);
+                if (account.meta.type === 'Mojang') {
+                    let refresh = await AZAuth.refresh(account);
+                    console.log(refresh);
                     console.log(`Initializing Mojang account ${account.name}...`);
                     let refresh_accounts;
 
@@ -149,7 +107,9 @@ class Launcher {
                         meta: {
                             type: refresh.meta.type,
                             offline: refresh.meta.offline
-                        }
+                        },
+                        role: refresh.role,
+                        monnaie: refresh.monnaie
                     }
 
                     this.database.update(refresh_accounts, 'accounts');
@@ -160,11 +120,6 @@ class Launcher {
                     if (account.uuid === selectaccount) this.database.update({ uuid: "1234" }, 'accounts-selected')
                 }
             }
-
-
-
-
-            
             if (!(await this.database.get('1234', 'accounts-selected')).value.selected) {
                 let uuid = (await this.database.getAll('accounts'))[0]?.value?.uuid
                 if (uuid) {
@@ -182,6 +137,8 @@ class Launcher {
         }
         document.querySelector(".preload-content").style.display = "none";
     }
+    
 }
-
 new Launcher().init();
+
+
