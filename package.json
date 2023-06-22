@@ -1,11 +1,11 @@
 {
-    "name": "Selvania-Launcher",
-    "preductname": "Selvania Launcher",
-    "version": "1.3.0",
-    "description": "Launcher Mincraft custom (crack, premium)",
+    "name": "EterCube-Launcher",
+    "preductname": "EterCube Launcher",
+    "version": "1.4.0",
+    "description": "Launcher Mincraft de EterCube.",
     "main": "src/app.js",
-    "author": "Luuxis",
-    "url": "http://craftdium.ml/launcherSelvania",
+    "author": "AmbEAE (Fork of Luuxis)",
+    "url": "http://45.154.96.63:765",
     "engines": {
         "node": "^18.x.x"
     },
@@ -34,6 +34,6 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/luuxis/Selvania-Launcher.git"
+        "url": "git+https://github.com/AmbEAE/EterCube-Launcher.git"
     }
 }
